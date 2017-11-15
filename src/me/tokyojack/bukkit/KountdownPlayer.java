@@ -1,6 +1,5 @@
 package package;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,30 +21,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class KountdownPlayer {
 
 	private Map<String, Integer> players;
-	private int secondDelay;
+	private int tickDelay; // May want to change this name
 
 	private int runnableID;
 	private JavaPlugin plugin;
 
 	public KountdownPlayer(JavaPlugin plugin) {
 		this.players = new HashMap<String, Integer>();
-		this.secondDelay = 1;
+		this.tickDelay = 20;
 
 		this.runnableID = -1;
 		this.plugin = plugin;
 	}
 
-	public KountdownPlayer(int secondDelay, JavaPlugin plugin) {
+	public KountdownPlayer(int tickDelay, JavaPlugin plugin) {
 		this.players = new HashMap<String, Integer>();
-		this.secondDelay = secondDelay;
+		this.tickDelay = tickDelay;
 
 		this.runnableID = -1;
 		this.plugin = plugin;
 	}
 
-	public KountdownPlayer(JavaPlugin plugin, int secondDelay) {
+	public KountdownPlayer(JavaPlugin plugin, int tickDelay) {
 		this.players = new HashMap<String, Integer>();
-		this.secondDelay = secondDelay;
+		this.tickDelay = tickDelay;
 
 		this.runnableID = -1;
 		this.plugin = plugin;
@@ -85,12 +84,12 @@ public abstract class KountdownPlayer {
 		this.players.put(player.getName(), pastAmount - newAmount);
 	}
 
-	public void setIntervalSeconds(int seconds) {
-		this.secondDelay = seconds;
+	public void setTickDelay(int ticks) {
+		this.tickDelay = ticks;
 	}
 
-	public int getIntervalSeconds() {
-		return this.secondDelay;
+	public int getTickDelay() {
+		return this.tickDelay;
 	}
 
 	public int getPlayerTime(Player player) {
@@ -142,7 +141,7 @@ public abstract class KountdownPlayer {
 
 				}
 			}
-		}, 0, this.secondDelay * 20);
+		}, 0, this.tickDelay);
 	}
 
 	private void stopPlayerRunnable() {
