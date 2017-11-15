@@ -1,93 +1,95 @@
-package me.tokyojack.mcmarket.kountdowntimer;
-
+package package;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/*
+ * Created by tokyojack
+ * 
+ * DON't REMOVE
+ * 
+ * GITHUB: https://github.com/tokyojack
+ * DISCORD: tokyojack#7353
+ * 
+ */
+
 public abstract class KountdownPlayer {
 
-	private Map<String, Integer> playerNames = new HashMap<String, Integer>();
+	private Map<String, Integer> players;
+	private int intervalInSeconds;
 
-	private int seconds;
-	private boolean isStarted;
-
-	private JavaPlugin plugin;
 	private int runnableID;
+	private JavaPlugin plugin;
 
 	public KountdownPlayer(JavaPlugin plugin) {
-		this.seconds = 1;
-		this.isStarted = false;
+		this.players = new HashMap<String, Integer>();
+		this.intervalInSeconds = 1;
 
+		this.runnableID = -1;
 		this.plugin = plugin;
-		this.runnableID = 0;
 	}
 
 	public KountdownPlayer(int seconds, JavaPlugin plugin) {
-		this.seconds = seconds;
-		this.isStarted = false;
+		this.players = new HashMap<String, Integer>();
+		this.intervalInSeconds = seconds;
 
+		this.runnableID = -1;
 		this.plugin = plugin;
-		this.runnableID = 0;
 	}
 
 	public abstract void tick(Player player, int countdown);
 
-	public abstract void finished(Player player);
+	public abstract void finish(Player player);
 
-	public void addPlayer(Player player, int time) {
-		if (!this.isStarted) // If it isn't started
-			start();
+	public void startPlayer(Player player, int time) {
+		this.players.put(player.getName(), time);
 
-		this.playerNames.put(player.getName(), time);
+		if (this.runnableID == -1)
+			startPlayerRunnable();
 	}
 
-	public void removePlayer(Player player) {
-		this.playerNames.remove(player.getName());
+	public void stopPlayer(Player player) {
+		this.players.remove(player.getName());
 
-		if (this.playerNames.size() <= 0)
-			stop();
+		if (this.players.isEmpty())
+			this.stopPlayerRunnable();
 	}
 
-	public Boolean containsPlayer(Player player) {
-		return this.playerNames.containsKey(player.getName());
-	}
-
-	public boolean isStarted() {
-		return this.isStarted;
-	}
-
-	private void start() {
-		this.isStarted = true;
-		this.runnableID = this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
+	private void startPlayerRunnable() {
+		this.runnableID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
 			public void run() {
-				List<Player> players = playerNames.keySet().stream().map(playerName -> Bukkit.getPlayer(playerName))
-						.collect(Collectors.toList());
+				Iterator<Map.Entry<String, Integer>> it = players.entrySet().iterator();
+				while (it.hasNext()) { // Gotta do a ireator as I'm removing
+										// while looping
+					Map.Entry<String, Integer> pair = it.next();
 
-				players.forEach(player -> {
+					String playerName = pair.getKey();
+					int time = pair.getValue();
+					Player player = Bukkit.getPlayer(playerName);
+
 					if (player != null) {
-						int amount = playerNames.get(player.getName());
-						if ((amount - 1) <= 0) {
-							playerNames.remove(player.getName());
-							finished(player);
+						if (time <= 0) {
+							players.remove(playerName);
+							stopPlayer(player);
 							return;
 						}
-						tick(player, amount);
-						playerNames.put(player.getName(), amount - 1);
-					}
-				});
 
+						tick(player, time);
+						players.put(playerName, time - 1);
+					}
+
+				}
 			}
-		}, 0, this.seconds * 20);
+		}, 0, this.intervalInSeconds * 20);
 	}
 
-	private void stop() {
-		this.isStarted = false;
+	private void stopPlayerRunnable() {
 		Bukkit.getScheduler().cancelTask(this.runnableID);
+		this.runnableID = -1;
 	}
 
 }
