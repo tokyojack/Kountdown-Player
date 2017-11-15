@@ -21,22 +21,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class KountdownPlayer {
 
 	private Map<String, Integer> players;
-	private int interval;
+	private int intervalInSeconds;
 
 	private int runnableID;
 	private JavaPlugin plugin;
 
 	public KountdownPlayer(JavaPlugin plugin) {
 		this.players = new HashMap<String, Integer>();
-		this.interval = 1;
+		this.intervalInSeconds = 1;
 
 		this.runnableID = -1;
 		this.plugin = plugin;
 	}
 
-	public KountdownPlayer(int interval, JavaPlugin plugin) {
+	public KountdownPlayer(int seconds, JavaPlugin plugin) {
 		this.players = new HashMap<String, Integer>();
-		this.interval = interval;
+		this.intervalInSeconds = seconds;
 
 		this.runnableID = -1;
 		this.plugin = plugin;
@@ -55,25 +55,66 @@ public abstract class KountdownPlayer {
 		start(player);
 
 		if (this.runnableID == -1)
-			startPlayerRunnable();
+			this.startPlayerRunnable();
 	}
 
 	public void stopPlayer(Player player) {
 		this.players.remove(player.getName());
 		stop(player);
 
-		if (this.players.isEmpty())
+		if (this.isEmpty())
 			this.stopPlayerRunnable();
+	}
+
+	public void addPlayerTime(Player player, int newAmount) {
+		int pastAmount = this.players.get(player.getName());
+		this.players.put(player.getName(), pastAmount + newAmount);
+	}
+
+	public void subtractPlayerTime(Player player, int newAmount) {
+		int pastAmount = this.players.get(player.getName());
+		this.players.put(player.getName(), pastAmount - newAmount);
+	}
+
+	public void setIntervalTime(int seconds) {
+		this.intervalInSeconds = seconds;
+	}
+
+	public int getInteralTime() {
+		return this.intervalInSeconds;
+	}
+
+	public int getPlayerTime(Player player) {
+		return this.players.get(player.getName());
+	}
+
+	public Map<String, Integer> getPlayers() {
+		return this.players;
+	}
+
+	public boolean containsPlayer(Player player) {
+		return this.players.containsKey(player.getName());
+	}
+
+	public Boolean isPlayerStarted(Player player) {
+		return this.players.containsKey(player.getName());
+	}
+
+	public Boolean isRunnableStarted() {
+		return this.runnableID != -1;
+	}
+
+	public Boolean isEmpty() {
+		return this.players.isEmpty();
 	}
 
 	private void startPlayerRunnable() {
 		this.runnableID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
 			public void run() {
-				Iterator<Map.Entry<String, Integer>> playerIterator = players.entrySet().iterator();
-				while (playerIterator.hasNext()) { // Gotta do a ireator as I'm
-													// removing. Would of used a foreach
-
-					Map.Entry<String, Integer> pair = playerIterator.next();
+				Iterator<Map.Entry<String, Integer>> it = players.entrySet().iterator();
+				while (it.hasNext()) { // Gotta do a ireator as I'm removing
+										// while looping
+					Map.Entry<String, Integer> pair = it.next();
 
 					String playerName = pair.getKey();
 					int time = pair.getValue();
@@ -92,8 +133,7 @@ public abstract class KountdownPlayer {
 
 				}
 			}
-			// 20 ticks = 1 second
-		}, 0, this.interval * 20);
+		}, 0, this.intervalInSeconds * 20);
 	}
 
 	private void stopPlayerRunnable() {
