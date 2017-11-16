@@ -1,4 +1,4 @@
-package package;
+package package
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,6 +74,14 @@ public abstract class KountdownPlayer {
 			this.stopPlayerRunnable();
 	}
 
+	public void finishPlayer(Player player) {
+		this.players.remove(player.getName());
+		finish(player);
+
+		if (this.isEmpty())
+			this.stopPlayerRunnable();
+	}
+
 	public void addTimeToPlayer(Player player, int newAmount) {
 		int pastAmount = this.players.get(player.getName());
 		this.players.put(player.getName(), pastAmount + newAmount);
@@ -130,9 +138,8 @@ public abstract class KountdownPlayer {
 
 					if (player != null) {
 						if (time <= 0) {
-							players.remove(playerName);
-							stopPlayer(player);
-							return;
+							finishPlayer(player);
+							continue;
 						}
 
 						tick(player, time);
@@ -149,4 +156,4 @@ public abstract class KountdownPlayer {
 		this.runnableID = -1;
 	}
 
-}	
+}
