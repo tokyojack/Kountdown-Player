@@ -50,13 +50,13 @@ public abstract class KountdownPlayer {
 		this.plugin = plugin;
 	}
 
-	public abstract void start(Player player);
+	protected abstract void start(Player player);
 
-	public abstract void tick(Player player, int seconds);
+	protected abstract void tick(Player player, int seconds);
 
-	public abstract void stop(Player player);
+	protected abstract void stop(Player player);
 
-	public abstract void finish(Player player);
+	protected abstract void finish(Player player);
 
 	public void startPlayer(Player player, int time) {
 		this.players.put(player.getName(), time);
