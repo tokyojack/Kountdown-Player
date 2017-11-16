@@ -1,4 +1,4 @@
-package package;
+package me.tokyojack.mcmarket.kountdowntimer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,12 +74,12 @@ public abstract class KountdownPlayer {
 			this.stopPlayerRunnable();
 	}
 
-	public void addPlayerTime(Player player, int newAmount) {
+	public void addTimeToPlayer(Player player, int newAmount) {
 		int pastAmount = this.players.get(player.getName());
 		this.players.put(player.getName(), pastAmount + newAmount);
 	}
 
-	public void subtractPlayerTime(Player player, int newAmount) {
+	public void subtractTimeFromPlayer(Player player, int newAmount) {
 		int pastAmount = this.players.get(player.getName());
 		this.players.put(player.getName(), pastAmount - newAmount);
 	}
@@ -149,4 +149,4 @@ public abstract class KountdownPlayer {
 		this.runnableID = -1;
 	}
 
-}
+}	
