@@ -29,7 +29,7 @@ public class Test extends JavaPlugin implements Listener {
 
 		@Override
 		public void finish(Player player) {
-			player.sendMessage("Done!");
+			player.kickPlayer("You have logged out!");
 		}
 
 	};
