@@ -1,12 +1,17 @@
-# Kountdown-Player
-A util class that runs code for players over a set amount of time. Made for Bukkit API.
+<h2  align="center">Kountdown-Player</h2>
+<p  align="center"A util class that runs code for players over a set amount of time. Made for Bukkit API</p>
 
-INSTRUCTIONS:
+<br/>
+
+## Instructions:
+
 1. Copy and paste the util class from ```src/me/tokyojack/bukkit``` to your project into a class called ```KountdownPlayer```
 2. Change the package at the top to your needed one, and you're good to go!
 
-TO USE:
-```
+## Usage:
+
+Here's a quick example of it with Vault.
+```java
 public class Test extends JavaPlugin implements Listener {
 
 	KountdownPlayer logoutPlayerKountdown = new KountdownPlayer(this) {
@@ -61,7 +66,6 @@ public class Test extends JavaPlugin implements Listener {
 }
 ```
 
-Now you've just install the program! You're a pretty cool person:
-1. ```(•_•)```
-2. ```( •_•)>⌐■-■```
-3. ```(⌐■_■)```
+##
+
+Now you've just obtained the plugin! Oh boy, I bet people are willing to bow down to me for this util ```╰(◡‿◡✿╰)```
