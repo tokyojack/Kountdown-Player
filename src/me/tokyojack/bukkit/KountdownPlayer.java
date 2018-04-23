@@ -27,22 +27,10 @@ public abstract class KountdownPlayer {
 	private JavaPlugin plugin;
 
 	public KountdownPlayer(JavaPlugin plugin) {
-		this.players = new HashMap<String, Integer>();
-		this.tickDelay = 20;
-
-		this.runnableID = -1;
-		this.plugin = plugin;
+		this(20, plugin);
 	}
 
 	public KountdownPlayer(int tickDelay, JavaPlugin plugin) {
-		this.players = new HashMap<String, Integer>();
-		this.tickDelay = tickDelay;
-
-		this.runnableID = -1;
-		this.plugin = plugin;
-	}
-
-	public KountdownPlayer(JavaPlugin plugin, int tickDelay) {
 		this.players = new HashMap<String, Integer>();
 		this.tickDelay = tickDelay;
 
