@@ -1,5 +1,5 @@
 <h2  align="center">Kountdown-Player</h2>
-<p  align="center"A util class that runs code for players over a set amount of time. Made for Bukkit API</p>
+<p  align="center">A Bukkit utility for running code for players over a set amount of time</p>
 
 <br/>
 
